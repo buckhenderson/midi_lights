@@ -59,7 +59,7 @@ def color_map(value):
 
 
 HOST = '192.168.1.36'
-PORT = 2018
+PORT = 2019
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind((HOST, PORT))
 s.listen(1)
@@ -75,7 +75,7 @@ def led():
         global this_list
         print('entering try')
         while True and not stop:
-            notes = [x[1] - 21 for x in this_list]
+            notes = [x[1] for x in this_list]
 
             # print(notes)
             for i in range(strip.numPixels()):
