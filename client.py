@@ -3,8 +3,10 @@ import socket
 import time
 import pickle
 import mido
+
+
 HOST='192.168.1.36'
-PORT=2019
+PORT=2031
 s=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((HOST, PORT))
 this_list = []
@@ -35,4 +37,5 @@ with mido.open_input('MIDI Matrix Encoder:MIDI Matrix Encoder MIDI 1 20:0') as i
 #         time.sleep(1)
 # except:
 #     s.close()
+
 

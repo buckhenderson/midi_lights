@@ -27,39 +27,39 @@ LED_CHANNEL = 0  # set to '1' for GPIOs 13, 19, 41, 45 or 53
 def color_map(value):
     # colors are GRB for some reason
     if value == 0:
-        return Color(0, 0, 0)
+        return (0, 0, 0)
     if value < 10:
-        return Color(0, 0, 255)
+        return (0, 0, 255)
     if value < 20:
-        return Color(102, 0, 255)
+        return (102, 0, 255)
     if value < 35:
-        return Color(144, 0, 255)
+        return (144, 0, 255)
     if value < 40:
-        return Color(174, 0, 255)
+        return (174, 0, 255)
     if value < 50:
-        return Color(198, 0, 255)
+        return (198, 0, 255)
     if value < 60:
-        return Color(220, 0, 192)
-    if Value < 70:
-        return Color(240, 0, 115)
-    if Value < 75:
-        return Color(255, 0, 0)
+        return (220, 0, 192)
+    if value < 70:
+        return (240, 0, 115)
+    if value < 75:
+        return (255, 0, 0)
     if value < 80:
-        return Color(228, 134, 0)
+        return (228, 134, 0)
     if value < 85:
-        return Color(199, 182, 0)
+        return (199, 182, 0)
     if value < 90:
-        return Color(167, 215, 0)
+        return (167, 215, 0)
     if value < 100:
-        return Color(130, 238, 0)
+        return (130, 238, 0)
     if value < 100:
-        return Color(86, 251, 0)
+        return (86, 251, 0)
     else:
-        return Color(0, 255, 0)
+        return (0, 255, 0)
 
 
 HOST = '192.168.1.36'
-PORT = 2019
+PORT = 2031
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind((HOST, PORT))
 s.listen(1)
@@ -76,13 +76,11 @@ def led():
         print('entering try')
         while True and not stop:
             notes = [x[1] for x in this_list]
-
-            # print(notes)
-            for i in range(strip.numPixels()):
-                if i in notes:
-                    strip.setPixelColor(i, Color(0, 255, 0))
-                else:
-                    strip.setPixelColor(i, Color(0, 0, 0))
+            kill_notes = [i for i in range(strip.numPixels()) if i not in notes]
+            for i in kill_notes:
+                strip.setPixelColor(i, Color(0, 0, 0))
+            for item in this_list:
+                strip.setPixelColor(item[1], Color(item[3][0], item[3][1], item[3][2]))
             strip.show()
 
         for i in range(strip.numPixels()):
@@ -107,7 +105,8 @@ def midio():
             if midi_in:
                 # print(midi_in)
                 if midi_in[0] == 'note_on':
-                    this_list.append(midi_in)
+                    new_midi_in = (midi_in[0], midi_in[1], midi_in[2], color_map(midi_in[2]))
+                    this_list.append(new_midi_in)
                 if midi_in[0] == 'note_off':
                     this_list = [x for x in this_list if x[1] != midi_in[1]]
             print(this_list)
