@@ -104,6 +104,7 @@ def midio():
     print('Connected by', addr)
     global stop
     global ons
+    global pedal
     try:
         while True and not stop:
             message = conn.recv(1024)
@@ -115,6 +116,8 @@ def midio():
                     ons.append(new_midi_in)
                 if midi_in[0] == 'note_off':
                     kills.append(midi_in[1])
+                if midi_in[0] == pedal:
+                    pedal = midi_in[1]
                 if not pedal:
                     ons = [x for x in ons if x[1] not in kills]
             print(ons)
