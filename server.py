@@ -10,11 +10,15 @@ from neopixel import *
 
 global stop
 stop = False
-global this_list
-this_list = []
+global ons
+ons = []
+global pedal
+pedal = False
+global kills
+kills = []
 
 # LED strip configuration:
-LED_COUNT = 150  # Number of LED pixels.
+LED_COUNT = 88  # Number of LED pixels.
 LED_PIN = 18  # GPIO pin connected to the pixels (18 uses PWM!).
 # LED_PIN        = 10      # GPIO pin connected to the pixels (10 uses SPI /dev/spidev0.0).
 LED_FREQ_HZ = 800000  # LED signal frequency in hertz (usually 800khz)
@@ -58,7 +62,7 @@ def color_map(value):
         return (0, 255, 0)
 
 
-HOST = '192.168.1.36'
+HOST = '192.168.1.37'
 PORT = 2031
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind((HOST, PORT))
@@ -72,14 +76,16 @@ def led():
     strip.begin()
     try:
         global stop
-        global this_list
+        global ons
+        global pedal
+        global kills
         print('entering try')
         while True and not stop:
-            notes = [x[1] for x in this_list]
+            notes = [x[1] for x in ons]
             kill_notes = [i for i in range(strip.numPixels()) if i not in notes]
             for i in kill_notes:
                 strip.setPixelColor(i, Color(0, 0, 0))
-            for item in this_list:
+            for item in ons:
                 strip.setPixelColor(item[1], Color(item[3][0], item[3][1], item[3][2]))
             strip.show()
 
@@ -97,7 +103,7 @@ def midio():
     s.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
     print('Connected by', addr)
     global stop
-    global this_list
+    global ons
     try:
         while True and not stop:
             message = conn.recv(1024)
@@ -106,10 +112,12 @@ def midio():
                 # print(midi_in)
                 if midi_in[0] == 'note_on':
                     new_midi_in = (midi_in[0], midi_in[1], midi_in[2], color_map(midi_in[2]))
-                    this_list.append(new_midi_in)
+                    ons.append(new_midi_in)
                 if midi_in[0] == 'note_off':
-                    this_list = [x for x in this_list if x[1] != midi_in[1]]
-            print(this_list)
+                    kills.append(midi_in[1])
+                if not pedal:
+                    ons = [x for x in ons if x[1] not in kills]
+            print(ons)
         s.close()
     except:
         print('closing')
