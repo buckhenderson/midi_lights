@@ -27,6 +27,7 @@ LED_BRIGHTNESS = 255  # Set to 0 for darkest and 255 for brightest
 LED_INVERT = False  # True to invert the signal (when using NPN transistor level shift)
 LED_CHANNEL = 0  # set to '1' for GPIOs 13, 19, 41, 45 or 53
 
+SECONDS = 10  # this constant controls the number of seconds to fade to black
 
 def color_map(value):
     # colors are GRB for some reason
@@ -86,7 +87,8 @@ def led():
             for i in kill_notes:
                 strip.setPixelColor(i, Color(0, 0, 0))
             for item in ons:
-                strip.setPixelColor(item[1], Color(item[3][0], item[3][1], item[3][2]))
+                new_color = fade(item[3], item[4], SECONDS)
+                strip.setPixelColor(item[1], Color(new_color[0], new_color[1], new_color[2]))
             strip.show()
 
         for i in range(strip.numPixels()):
@@ -96,6 +98,11 @@ def led():
         for i in range(strip.numPixels()):
             strip.setPixelColor(i, Color(0, 0, 0))
         strip.show()
+
+def fade(tup, input_time, seconds):
+    multiplier = 1 - min((time.time() - input_time), seconds) / seconds
+    new_tup = tuple([int(multiplier*x) for x in tup])
+    return new_tup
 
 
 def midio():
