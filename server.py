@@ -182,8 +182,8 @@ def rainbowCycle(strip, wait_ms=20, iterations=5):
 def idle():
     global last_input
     global strip
-    idle_monitor = time.time() - last_input > 10
     while True:
+        idle_monitor = time.time() - last_input > 10
         while idle_monitor:
             rainbow(strip, idle_monitor)
             idle_monitor = time.time() - last_input > 10
@@ -196,6 +196,8 @@ try:
     midi_thread.start()
     led_thread = threading.Thread(target=led)
     led_thread.start()
+    idle_thread = threading.Thread(target=idle)
+    idle_thread.start()
 except:
     s.close()
     stop = True
