@@ -14,7 +14,7 @@ with mido.open_input('MIDI Matrix Encoder:MIDI Matrix Encoder MIDI 1 20:0') as i
     while True:
         for msg in inport:
             if hasattr(msg, 'note'):
-                midi_in = (msg.type, msg.note - 21, msg.velocity)
+                midi_in = (msg.type, msg.note - 21, msg.velocity, time.time())
                 message = pickle.dumps(midi_in)
                 s.send(message)
                 if msg.type == 'note_on':

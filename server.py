@@ -113,7 +113,7 @@ def midio():
             if midi_in:
                 # print(midi_in)
                 if midi_in[0] == 'note_on':
-                    new_midi_in = (midi_in[0], midi_in[1], midi_in[2], color_map(midi_in[2]))
+                    new_midi_in = (midi_in[0], midi_in[1], midi_in[2], color_map(midi_in[2]), midi_in[3])
                     ons.append(new_midi_in)
                 if midi_in[0] == 'note_off':
                     kills.append(midi_in[1])
