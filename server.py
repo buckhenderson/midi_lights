@@ -62,7 +62,7 @@ def color_map(value):
         return (0, 255, 0)
 
 
-HOST = '192.168.1.37'
+HOST = '192.168.1.36'
 PORT = 2031
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind((HOST, PORT))
@@ -105,6 +105,7 @@ def midio():
     global stop
     global ons
     global pedal
+    global kills
     try:
         while True and not stop:
             message = conn.recv(1024)
@@ -120,6 +121,7 @@ def midio():
                     pedal = midi_in[1]
                 if not pedal:
                     ons = [x for x in ons if x[1] not in kills]
+                    kills = []
             print(ons)
         s.close()
     except:
