@@ -16,6 +16,8 @@ global pedal
 pedal = False
 global kills
 kills = []
+global last_input
+last_input = time.time()
 
 # LED strip configuration:
 LED_COUNT = 88  # Number of LED pixels.
@@ -28,6 +30,7 @@ LED_INVERT = False  # True to invert the signal (when using NPN transistor level
 LED_CHANNEL = 0  # set to '1' for GPIOs 13, 19, 41, 45 or 53
 
 SECONDS = 10  # this constant controls the number of seconds to fade to black
+
 
 def color_map(value):
     # colors are GRB for some reason
@@ -70,9 +73,12 @@ s.bind((HOST, PORT))
 s.listen(1)
 
 
+global strip
+strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL)
+
 def led():
     print('starting led')
-    strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL)
+    global strip
     print('running begin()')
     strip.begin()
     try:
@@ -113,11 +119,13 @@ def midio():
     global ons
     global pedal
     global kills
+    global last_input
     try:
         while True and not stop:
             message = conn.recv(1024)
             midi_in = pickle.loads(message)
             if midi_in:
+                last_input = time.time()
                 # print(midi_in)
                 if midi_in[0] == 'note_on':
                     new_midi_in = (midi_in[0], midi_in[1], midi_in[2], color_map(midi_in[2]), midi_in[3])
@@ -134,6 +142,53 @@ def midio():
     except:
         print('closing')
         s.close()
+
+
+def wheel(pos):
+    """Generate rainbow colors across 0-255 positions."""
+    if pos < 85:
+        return Color(pos * 3, 255 - pos * 3, 0)
+    elif pos < 170:
+        pos -= 85
+        return Color(255 - pos * 3, 0, pos * 3)
+    else:
+        pos -= 170
+        return Color(0, pos * 3, 255 - pos * 3)
+
+
+def rainbow(strip, idle_monitor, wait_ms=20, iterations=1):
+    """Draw rainbow that fades across all pixels at once."""
+    for j in range(256*iterations):
+        for i in range(strip.numPixels()):
+            strip.setPixelColor(i, wheel((i+j) & 255))
+        strip.show()
+        if not idle_monitor:
+            for i in range(strip.numPixels()):
+                strip.setPixelColor(i, Color(0, 0, 0))
+                strip.show()
+            break
+        time.sleep(wait_ms/1000.0)
+
+
+def rainbowCycle(strip, wait_ms=20, iterations=5):
+    """Draw rainbow that uniformly distributes itself across all pixels."""
+    for j in range(256*iterations):
+        for i in range(strip.numPixels()):
+            strip.setPixelColor(i, wheel((int(i * 256 / strip.numPixels()) + j) & 255))
+        strip.show()
+        time.sleep(wait_ms/1000.0)
+
+
+def idle():
+    global last_input
+    global strip
+    idle_monitor = time.time() - last_input > 10
+    while True:
+        while idle_monitor:
+            rainbow(strip, idle_monitor)
+            idle_monitor = time.time() - last_input > 10
+        while not idle_monitor:
+            pass
 
 
 try:
