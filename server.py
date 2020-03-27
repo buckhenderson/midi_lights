@@ -115,17 +115,22 @@ def midio():
     global kills
     try:
         while True and not stop:
-            message = conn.recv(1024)
-            midi_in = pickle.loads(message)
-            if midi_in:
-                # print(midi_in)
-                if midi_in[0] == 'note_on':
-                    new_midi_in = (midi_in[0], midi_in[1], midi_in[2], color_map(midi_in[2]), midi_in[3])
+            this_message_s = conn.recv(38)
+            this_message = pickle.loads(this_message_s)
+            if this_message:
+                message_list = [word.strip() for word in this_message.split(',')]
+                this_type = message_list[0]
+                if this_type == 'on':
+                    this_note = int(message_list[1])
+                    this_velocity = int(message_list[2])
+                    this_time = float(message_list[3])
+                    new_midi_in = (this_type, this_note, this_velocity, color_map(this_velocity), this_time)
                     ons.append(new_midi_in)
-                if midi_in[0] == 'note_off':
-                    kills.append(midi_in[1])
-                if midi_in[0] == 'pedal':
-                    pedal = midi_in[1]
+                if this_type == 'off':
+                    this_note = int(message_list[1])
+                    kills.append(this_note)
+                if this_type == 'pedal':
+                    pedal = int(message_list[1])
                 if not pedal:
                     ons = [x for x in ons if x[1] not in kills]
                     kills = []

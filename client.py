@@ -14,15 +14,22 @@ with mido.open_input('MIDI Matrix Encoder:MIDI Matrix Encoder MIDI 1 20:0') as i
     while True:
         for msg in inport:
             if hasattr(msg, 'note'):
-                midi_in = (msg.type, msg.note - 21, msg.velocity, time.time())
-                message = pickle.dumps(midi_in)
-                s.send(message)
+                if msg.type == 'note_on':
+                    this_type = 'on'
+                else:
+                    this_type = 'off'
+                this_note = msg.note - 21
+                this_velocity = msg.velocity
+                this_time = time.time()
+                this_message = '{0:<3},{1:<2},{2:<3},{3:6f}'.format(this_type, this_note, this_velocity, this_time)
+                this_message_s = pickle.dumps(this_message)
+                s.send(this_message_s)
                 if msg.type == 'note_on':
                     ons.append(msg)
                 if msg.type == 'note_off':
                     ons = [x for x in ons if x.note != msg.note]
             if hasattr(msg, 'control'):
-                midi_in = ('pedal', False if msg.value == 0 else True)
-                message = pickle.dumps(midi_in)
-                s.send(message)
+                this_message = 'pedal, {}                    '.format(0 if msg.value == 0 else 1)
+                this_message_s = pickle.dumps(this_message)
+                s.send(this_message_s)
             print(ons)
