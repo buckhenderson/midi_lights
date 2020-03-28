@@ -18,6 +18,8 @@ global kills
 kills = []
 global last_message_ts
 last_message_ts = time.time()
+global idle
+idle = False
 
 # LED strip configuration:
 LED_COUNT = 88  # Number of LED pixels.
@@ -68,10 +70,13 @@ def color_map(value):
 
 def rainbow(strip, wait_ms=20, iterations=1):
     """Draw rainbow that fades across all pixels at once."""
+    global idle
     for j in range(256*iterations):
         for i in range(strip.numPixels()):
             strip.setPixelColor(i, wheel((i+j) & 255))
         strip.show()
+        if not idle:
+            break
         time.sleep(wait_ms/1000.0)
 
 def wheel(pos):
@@ -103,7 +108,7 @@ def led():
         global pedal
         global kills
         global last_message_ts
-        idle = False
+        global idle
         print('entering try')
         while True and not stop:
             while True and not idle:
