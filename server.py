@@ -16,6 +16,8 @@ global pedal
 pedal = False
 global kills
 kills = []
+global last_message_ts
+last_message_ts = time.time()
 
 # LED strip configuration:
 LED_COUNT = 88  # Number of LED pixels.
@@ -28,6 +30,7 @@ LED_INVERT = False  # True to invert the signal (when using NPN transistor level
 LED_CHANNEL = 0  # set to '1' for GPIOs 13, 19, 41, 45 or 53
 
 SECONDS = 10  # this constant controls the number of seconds to fade to black
+IDLE_TIME = 10  # time to go to idle
 
 def color_map(value):
     # colors are GRB for some reason
@@ -63,6 +66,25 @@ def color_map(value):
         return (0, 255, 0)
 
 
+def rainbow(strip, wait_ms=20, iterations=1):
+    """Draw rainbow that fades across all pixels at once."""
+    for j in range(256*iterations):
+        for i in range(strip.numPixels()):
+            strip.setPixelColor(i, wheel((i+j) & 255))
+        strip.show()
+        time.sleep(wait_ms/1000.0)
+
+def wheel(pos):
+    """Generate rainbow colors across 0-255 positions."""
+    if pos < 85:
+        return Color(pos * 3, 255 - pos * 3, 0)
+    elif pos < 170:
+        pos -= 85
+        return Color(255 - pos * 3, 0, pos * 3)
+    else:
+        pos -= 170
+        return Color(0, pos * 3, 255 - pos * 3)
+
 HOST = '192.168.1.36'
 PORT = 2031
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -80,17 +102,22 @@ def led():
         global ons
         global pedal
         global kills
+        global last_message_ts
         print('entering try')
         while True and not stop:
-            notes = [x[1] for x in ons]
-            kill_notes = [i for i in range(strip.numPixels()) if i not in notes]
-            for i in kill_notes:
-                strip.setPixelColor(i, Color(0, 0, 0))
-            for item in ons:
-                new_color = fade(item[3], item[4], SECONDS)
-                strip.setPixelColor(item[1], Color(new_color[0], new_color[1], new_color[2]))
-            strip.show()
-
+            while True and not idle:
+                notes = [x[1] for x in ons]
+                kill_notes = [i for i in range(strip.numPixels()) if i not in notes]
+                for i in kill_notes:
+                    strip.setPixelColor(i, Color(0, 0, 0))
+                for item in ons:
+                    new_color = fade(item[3], item[4], SECONDS)
+                    strip.setPixelColor(item[1], Color(new_color[0], new_color[1], new_color[2]))
+                strip.show()
+                idle = (time.time() - last_message_ts) > IDLE_TIME and len(ons) == 0
+            while True and idle:
+                rainbow(strip)
+                idle = (time.time() - last_message_ts) > IDLE_TIME and len(ons) == 0
         for i in range(strip.numPixels()):
             strip.setPixelColor(i, Color(0, 0, 0))
         strip.show()
@@ -113,10 +140,12 @@ def midio():
     global ons
     global pedal
     global kills
+    global last_message_ts
     try:
         while True and not stop:
             this_message_s = conn.recv(38)
             this_message = pickle.loads(this_message_s)
+            last_message_ts = time.time()
             if this_message:
                 message_list = [word.strip() for word in this_message.split(',')]
                 this_type = message_list[0]
