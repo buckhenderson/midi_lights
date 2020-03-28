@@ -73,7 +73,6 @@ def rainbow(strip, wait_ms=20, iterations=1):
             strip.setPixelColor(i, wheel((i+j) & 255))
         strip.show()
         time.sleep(wait_ms/1000.0)
-        print('iteration rainbow', time.time())
 
 def wheel(pos):
     """Generate rainbow colors across 0-255 positions."""
@@ -120,6 +119,9 @@ def led():
             while True and idle:
                 rainbow(strip)
                 idle = (time.time() - last_message_ts) > IDLE_TIME and len(ons) == 0
+                if not idle:
+                    for i in range(strip.numPixels()):
+                        strip.setPixelColor(i, Color(0, 0, 0))
         for i in range(strip.numPixels()):
             strip.setPixelColor(i, Color(0, 0, 0))
         strip.show()
