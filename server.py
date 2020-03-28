@@ -71,9 +71,12 @@ def color_map(value):
 def rainbow(strip, wait_ms=20, iterations=1):
     """Draw rainbow that fades across all pixels at once."""
     global idle
+    global last_message_ts
+    global ons
     for j in range(256*iterations):
         for i in range(strip.numPixels()):
             strip.setPixelColor(i, wheel((i+j) & 255))
+            idle = (time.time() - last_message_ts) > IDLE_TIME and len(ons) == 0
             if not idle:
                 break
         if not idle:
