@@ -73,6 +73,7 @@ def rainbow(strip, wait_ms=20, iterations=1):
             strip.setPixelColor(i, wheel((i+j) & 255))
         strip.show()
         time.sleep(wait_ms/1000.0)
+        print('iteration rainbow', time.time())
 
 def wheel(pos):
     """Generate rainbow colors across 0-255 positions."""
