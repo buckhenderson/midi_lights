@@ -103,6 +103,7 @@ def led():
         global pedal
         global kills
         global last_message_ts
+        idle = False
         print('entering try')
         while True and not stop:
             while True and not idle:
