@@ -34,8 +34,9 @@ for msg in mido.MidiFile(file_paths[0]).play():
         if msg.type == 'note_off':
             ons = [x for x in ons if x.note != msg.note]
     if hasattr(msg, 'control'):
-        this_message = 'pedal, {}                    '.format(0 if msg.value == 0 else 1)
-        this_message_s = pickle.dumps(this_message)
-        s.send(this_message_s)
-        print(this_message)
+        if msg.control == 65:
+            this_message = 'pedal, {}                    '.format(0 if msg.value == 0 else 1)
+            this_message_s = pickle.dumps(this_message)
+            s.send(this_message_s)
+            print(this_message)
     print(ons)
