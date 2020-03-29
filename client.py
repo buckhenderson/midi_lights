@@ -30,7 +30,8 @@ with mido.open_input('MIDI Matrix Encoder:MIDI Matrix Encoder MIDI 1 20:0') as i
                 if msg.type == 'note_off':
                     ons = [x for x in ons if x.note != msg.note]
             if hasattr(msg, 'control'):
-                this_message = 'pedal, {}                    '.format(0 if msg.value == 0 else 1)
-                this_message_s = pickle.dumps(this_message)
-                s.send(this_message_s)
+                if msg.control == 65:
+                    this_message = 'pedal, {}                    '.format(0 if msg.value == 0 else 1)
+                    this_message_s = pickle.dumps(this_message)
+                    s.send(this_message_s)
             print(ons)
