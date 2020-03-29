@@ -13,6 +13,7 @@ ons = []
 with mido.open_input('MIDI Matrix Encoder:MIDI Matrix Encoder MIDI 1 20:0') as inport:
     while True:
         for msg in inport:
+            print(msg)
             if hasattr(msg, 'note'):
                 if msg.type == 'note_on':
                     this_type = 'on'
