@@ -180,6 +180,7 @@ def midio():
                     this_time = float(message_list[3])
                     new_midi_in = (this_type, this_note, this_velocity, color_map(this_velocity), this_time)
                     ons.append(new_midi_in)
+                    ons = remove_dupes(ons)
                 if this_type == 'off':
                     this_note = int(message_list[1])
                     kills.append(this_note)
