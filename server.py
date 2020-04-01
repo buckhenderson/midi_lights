@@ -180,6 +180,7 @@ def midio():
             print(ons)
         s.close()
     except:
+        stop = True
         print('closing')
         s.close()
 
