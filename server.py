@@ -151,9 +151,9 @@ def remove_dupes(lst):
     output = list()
     output_filter = list()
     for item in new_lst:
-        if item[2] not in output_filter:
+        if item[1] not in output_filter:
             output.append(item)
-            output_filter.append(item[2])
+            output_filter.append(item[1])
     return output
 
 
