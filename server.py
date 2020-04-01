@@ -116,7 +116,7 @@ def led():
         global idle
         print('entering try')
         while True and not stop:
-            while True and not idle:
+            while True and not idle and not stop:
                 notes = [x[1] for x in ons]
                 kill_notes = [i for i in range(strip.numPixels()) if i not in notes]
                 for i in kill_notes:
@@ -126,7 +126,7 @@ def led():
                     strip.setPixelColor(item[1], Color(new_color[0], new_color[1], new_color[2]))
                 strip.show()
                 idle = (time.time() - last_message_ts) > IDLE_TIME and len(ons) == 0
-            while True and idle:
+            while True and idle and not stop:
                 rainbow(strip)
                 idle = (time.time() - last_message_ts) > IDLE_TIME and len(ons) == 0
                 if not idle:
