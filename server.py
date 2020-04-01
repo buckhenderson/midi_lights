@@ -1,4 +1,6 @@
 # server
+# this section borrows heavily from https://github.com/jgarff/rpi_ws281x (Jeremy Garff)
+# Author: Tony DiCola (tony@tonydicola.com)
 import socket
 import pickle
 import time
@@ -33,6 +35,7 @@ LED_CHANNEL = 0  # set to '1' for GPIOs 13, 19, 41, 45 or 53
 
 SECONDS = 10  # this constant controls the number of seconds to fade to black
 IDLE_TIME = 10  # time to go to idle
+
 
 def color_map(value):
     # colors are GRB for some reason
@@ -95,6 +98,7 @@ def wheel(pos):
         pos -= 170
         return Color(0, pos * 3, 255 - pos * 3)
 
+
 HOST = '192.168.1.36'
 PORT = 2031
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -114,9 +118,8 @@ def led():
         global kills
         global last_message_ts
         global idle
-        print('entering try')
-        while True and not stop:
-            while True and not idle and not stop:
+        while not stop:
+            while not idle and not stop:
                 notes = [x[1] for x in ons]
                 kill_notes = [i for i in range(strip.numPixels()) if i not in notes]
                 for i in kill_notes:
@@ -126,7 +129,7 @@ def led():
                     strip.setPixelColor(item[1], Color(new_color[0], new_color[1], new_color[2]))
                 strip.show()
                 idle = (time.time() - last_message_ts) > IDLE_TIME and len(ons) == 0
-            while True and idle and not stop:
+            while idle and not stop:
                 rainbow(strip)
                 idle = (time.time() - last_message_ts) > IDLE_TIME and len(ons) == 0
                 if not idle:
@@ -139,6 +142,7 @@ def led():
         for i in range(strip.numPixels()):
             strip.setPixelColor(i, Color(0, 0, 0))
         strip.show()
+
 
 def fade(tup, input_time, seconds):
     multiplier = 1 - min((time.time() - input_time), seconds) / seconds
@@ -167,7 +171,7 @@ def midio():
     global kills
     global last_message_ts
     try:
-        while True and not stop:
+        while not stop:
             this_message_s = conn.recv(38)
             this_message = pickle.loads(this_message_s)
             last_message_ts = time.time()
