@@ -146,6 +146,17 @@ def fade(tup, input_time, seconds):
     return new_tup
 
 
+def remove_dupes(lst):
+    new_lst = sorted(lst, key=lambda x: (x[1], -x[4]))
+    output = list()
+    output_filter = list()
+    for item in new_lst:
+        if item[2] not in output_filter:
+            output.append(item)
+            output_filter.append(item[2])
+    return output
+
+
 def midio():
     conn, addr = s.accept()
     s.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
@@ -176,6 +187,7 @@ def midio():
                     pedal = int(message_list[1])
                 if not pedal:
                     ons = [x for x in ons if x[1] not in kills]
+                    ons = remove_dupes(ons)
                     kills = []
             print(ons)
         s.close()
