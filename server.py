@@ -134,7 +134,7 @@ def led():
                     strip.setPixelColor(item[1], Color(new_color[0], new_color[1], new_color[2]))
                 strip.show()
                 # the initial step into idle requires that it be at approximately the minute mark
-                idle = (time.time() - last_message_ts) > IDLE_TIME and len(ons) == 0 and abs(time)
+                idle = (time.time() - last_message_ts) > IDLE_TIME and len(ons) == 0 and abs(time.time() % 60) < 1
             while idle and not stop:
                 rainbow(strip)
                 idle = (time.time() - last_message_ts) > IDLE_TIME and len(ons) == 0
