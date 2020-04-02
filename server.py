@@ -70,6 +70,10 @@ def color_map(value):
     else:
         return (0, 255, 0)
 
+def multiplier():
+    seconds = time.time() % 60
+    return abs(math.sin(seconds/(30/math.pi)))
+
 
 def rainbow(strip, wait_ms=20, iterations=1):
     """Draw rainbow that fades across all pixels at once."""
@@ -89,14 +93,15 @@ def rainbow(strip, wait_ms=20, iterations=1):
 
 def wheel(pos):
     """Generate rainbow colors across 0-255 positions."""
+    multi = multiplier()
     if pos < 85:
-        return Color(pos * 3, 255 - pos * 3, 0)
+        return Color(pos * 3 * multi, (255 - pos * 3) * multi, 0)
     elif pos < 170:
         pos -= 85
-        return Color(255 - pos * 3, 0, pos * 3)
+        return Color((255 - pos * 3) * multi, 0, (pos * 3) * multi)
     else:
         pos -= 170
-        return Color(0, pos * 3, 255 - pos * 3)
+        return Color(0, pos * 3 * multi, (255 - pos * 3) * multi)
 
 
 HOST = '192.168.1.36'
@@ -128,7 +133,8 @@ def led():
                     new_color = fade(item[3], item[4], SECONDS)
                     strip.setPixelColor(item[1], Color(new_color[0], new_color[1], new_color[2]))
                 strip.show()
-                idle = (time.time() - last_message_ts) > IDLE_TIME and len(ons) == 0
+                # the initial step into idle requires that it be at approximately the minute mark
+                idle = (time.time() - last_message_ts) > IDLE_TIME and len(ons) == 0 and abs(time)
             while idle and not stop:
                 rainbow(strip)
                 idle = (time.time() - last_message_ts) > IDLE_TIME and len(ons) == 0
