@@ -72,11 +72,8 @@ def color_map(value):
         return (0, 255, 0)
 
 def multiplier():
-    print('in multipler')
     seconds = time.time() % 60
-    print('seconds = {}'.format(seconds))
     return_value = abs(math.sin(seconds/(30/math.pi)))
-    print('return_value = {}'.format(return_value))
     return return_value
 
 
@@ -99,8 +96,6 @@ def rainbow(strip, wait_ms=20, iterations=1):
 def wheel(pos):
     """Generate rainbow colors across 0-255 positions."""
     multi = multiplier()
-    print('in wheel')
-    print('multi = {}'.format(multi))
     if pos < 85:
         return Color(int(pos * 3 * multi), int((255 - pos * 3) * multi), 0)
     elif pos < 170:
