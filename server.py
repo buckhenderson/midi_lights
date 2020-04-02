@@ -77,7 +77,7 @@ def multiplier():
     print('seconds = {}'.format(seconds))
     return_value = abs(math.sin(seconds/(30/math.pi)))
     print('return_value = {}'.format(return_value))
-    return return_value
+    return int(return_value)
 
 
 def rainbow(strip, wait_ms=20, iterations=1):
