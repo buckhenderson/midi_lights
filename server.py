@@ -138,7 +138,6 @@ def led():
                 # the initial step into idle requires that it be at approximately the minute mark
                 idle = (time.time() - last_message_ts) > IDLE_TIME and len(ons) == 0 and abs(time.time() % 60) < 1
             while idle and not stop:
-                print('idle')
                 rainbow(strip)
                 idle = (time.time() - last_message_ts) > IDLE_TIME and len(ons) == 0
                 if not idle:
