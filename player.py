@@ -18,7 +18,7 @@ for msg in mido.MidiFile(file_paths[0]).play():
     print(msg)
     port2.send(msg)
     if hasattr(msg, 'note'):
-        if msg.type == 'note_on':
+        if msg.type == 'note_on' and msg.velocity != 0:
             this_type = 'on'
         else:
             this_type = 'off'
