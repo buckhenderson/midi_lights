@@ -6,6 +6,7 @@ import pickle
 import time
 import threading
 import sys
+import math
 
 sys.path.append('/home/pi/rpi_ws281x/python')
 from neopixel import *
@@ -104,7 +105,7 @@ def wheel(pos):
         return Color(0, pos * 3 * multi, (255 - pos * 3) * multi)
 
 
-HOST = '192.168.1.36'
+HOST = '192.168.1.37'
 PORT = 2031
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind((HOST, PORT))
