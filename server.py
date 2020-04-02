@@ -77,7 +77,7 @@ def multiplier():
     print('seconds = {}'.format(seconds))
     return_value = abs(math.sin(seconds/(30/math.pi)))
     print('return_value = {}'.format(return_value))
-    return int(return_value)
+    return return_value
 
 
 def rainbow(strip, wait_ms=20, iterations=1):
@@ -102,13 +102,13 @@ def wheel(pos):
     print('in wheel')
     print('multi = {}'.format(multi))
     if pos < 85:
-        return Color(pos * 3 * multi, (255 - pos * 3) * multi, 0)
+        return Color(int(pos * 3 * multi), int((255 - pos * 3) * multi), 0)
     elif pos < 170:
         pos -= 85
-        return Color((255 - pos * 3) * multi, 0, (pos * 3) * multi)
+        return Color(int((255 - pos * 3) * multi), 0, int((pos * 3) * multi))
     else:
         pos -= 170
-        return Color(0, pos * 3 * multi, (255 - pos * 3) * multi)
+        return Color(0, int(pos * 3 * multi), int((255 - pos * 3) * multi))
 
 
 HOST = '192.168.1.37'
