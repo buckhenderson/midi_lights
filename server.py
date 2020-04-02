@@ -74,7 +74,9 @@ def color_map(value):
 def multiplier():
     print('in multipler')
     seconds = time.time() % 60
-    return abs(math.sin(seconds/(30/math.pi)))
+    return_value = abs(math.sin(seconds/(30/math.pi)))
+    print('return_value = {}'.format(return_value))
+    return return_value
 
 
 def rainbow(strip, wait_ms=20, iterations=1):
