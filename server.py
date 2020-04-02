@@ -74,6 +74,7 @@ def color_map(value):
 def multiplier():
     print('in multipler')
     seconds = time.time() % 60
+    print('seconds = {}'.format(seconds))
     return_value = abs(math.sin(seconds/(30/math.pi)))
     print('return_value = {}'.format(return_value))
     return return_value
