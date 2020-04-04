@@ -23,7 +23,10 @@ for msg in mido.MidiFile(file_paths[0]).play():
         else:
             this_type = 'off'
         this_note = 87 - (msg.note - 21)
-        this_velocity = msg.velocity
+        if hasattr(msg, 'velocity'):
+            this_velocity = msg.velocity
+        if hasattr(msg, 'value'):
+            this_velocity = msg.value
         this_time = time.time()
         this_message = '{0:<3},{1:<2},{2:<3},{3:6f}'.format(this_type, this_note, this_velocity, this_time)
         print(this_message)
