@@ -42,9 +42,9 @@ for midi in midis:
             print(this_message)
             this_message_s = pickle.dumps(this_message)
             s.send(this_message_s)
-            if msg.type == 'note_on':
+            if this_type == 'on':
                 ons.append(msg)
-            if msg.type == 'note_off':
+            if this_type == 'off':
                 ons = [x for x in ons if x.note != msg.note]
         if hasattr(msg, 'control'):
             if msg.control == 65:
