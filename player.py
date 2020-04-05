@@ -24,8 +24,9 @@ random.shuffle(midis)
 
 for midi in midis:
     ons = []
+    print(midi)
     for msg in mido.MidiFile(midi).play():
-        print(msg)
+        # print(msg)
         port2.send(msg)
         if hasattr(msg, 'note'):
             if msg.type == 'note_on' and msg.velocity != 0:
@@ -39,7 +40,7 @@ for midi in midis:
                 this_velocity = msg.value
             this_time = time.time()
             this_message = '{0:<3},{1:<2},{2:<3},{3:6f}'.format(this_type, this_note, this_velocity, this_time)
-            print(this_message)
+            # print(this_message)
             this_message_s = pickle.dumps(this_message)
             s.send(this_message_s)
             if this_type == 'on':
@@ -51,5 +52,5 @@ for midi in midis:
                 this_message = 'pedal, {}                    '.format(0 if msg.value == 0 else 1)
                 this_message_s = pickle.dumps(this_message)
                 s.send(this_message_s)
-                print(this_message)
+                # print(this_message)
         print(ons)
