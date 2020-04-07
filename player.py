@@ -95,6 +95,6 @@ def player_piano():
                             s.send(this_message_s)
                             # print(this_message)
                     print(ons)
-    except:
+    except KeyboardInterrupt:
         port2.close()
         print('exiting player_piano')
