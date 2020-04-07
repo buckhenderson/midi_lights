@@ -7,7 +7,7 @@ import mido
 
 def client():
     try:
-        HOST = '192.168.1.36'
+        HOST = '192.168.1.37'
         PORT = 2031
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.connect((HOST, PORT))
@@ -39,6 +39,3 @@ def client():
                     print(ons)
     except:
         print('exiting client')
-
-
-client()

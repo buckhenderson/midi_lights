@@ -98,5 +98,3 @@ def player_piano():
     except:
         port2.close()
         print('exiting player_piano')
-
-player_piano()
