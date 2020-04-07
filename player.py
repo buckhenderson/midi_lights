@@ -44,14 +44,12 @@ while True and user_input != 'x':
             print('{}: {}'.format(directory, directory_dic[directory]))
         print('0: back')
         user_input = input()
-
-        for song in song_dic:
-            print(song)
-        for song in song_dic[directory_dic[int(user_input)]]:
-            print('{}: {}'.format(song, song_dic[directory_dic[int(user_input)]][song]))
+        this_directory = directory_dic[int(user_input)]
+        for song in song_dic[this_directory]:
+            print('{}: {}'.format(song, song_dic[this_directory][song]))
         print('0: back')
         user_input = input()
-        midis = song_dic[directory_dic[int(user_input)]][str(user_input)]
+        midis = [os.path.join(this_directory, song_dic[this_directory][int(user_input)])]
 
     if user_input == '2':
         midis = classical
@@ -61,12 +59,12 @@ while True and user_input != 'x':
 
     if user_input == '4':
         pass
+    print(midis)
 
     for midi in midis:
         ons = []
         print(midi)
         for msg in mido.MidiFile(midi).play():
-            # print(msg)
             port2.send(msg)
             if hasattr(msg, 'note'):
                 if msg.type == 'note_on' and msg.velocity != 0:
