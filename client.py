@@ -39,3 +39,6 @@ def client():
                     print(ons)
     except:
         print('exiting client')
+
+
+client()
