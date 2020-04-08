@@ -23,4 +23,5 @@ while True:
         print('selecting player')
         player.player_piano(s)
     if user_input == '3':
+        s.close()
         break
