@@ -206,6 +206,9 @@ def midio():
         # s.close()
     except KeyboardInterrupt:
         stop = True
+    except EOFError:
+        stop = True
+        s.close()
 
 
 try:
