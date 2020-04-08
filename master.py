@@ -2,7 +2,7 @@ import client
 import player
 import socket
 
-HOST = '192.168.1.37'
+HOST = '192.168.1.36'
 PORT = 2031
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((HOST, PORT))
