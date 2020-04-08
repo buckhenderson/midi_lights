@@ -21,6 +21,6 @@ while True:
         client.client(s)
     if user_input == '2':
         print('selecting player')
-        player.player_piano()
+        player.player_piano(s)
     if user_input == '3':
         break

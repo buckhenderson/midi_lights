@@ -6,7 +6,7 @@ import mido
 import os
 import random
 
-def player_piano():
+def player_piano(s):
 
     try:
         port2 = mido.open_output('test_port', virtual=True)
