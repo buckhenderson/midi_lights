@@ -215,3 +215,4 @@ try:
     led_thread.start()
 except KeyboardInterrupt:
     stop = True
+    s.close()
