@@ -1,5 +1,6 @@
 import client
 import player
+import socket
 
 HOST = '192.168.1.37'
 PORT = 2031
