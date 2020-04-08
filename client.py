@@ -5,7 +5,7 @@ import pickle
 import mido
 
 
-def client():
+def client(s):
     try:
         ons = []
         with mido.open_input('MIDI Matrix Encoder:MIDI Matrix Encoder MIDI 1 20:0') as inport:
