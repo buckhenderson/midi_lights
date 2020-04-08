@@ -11,11 +11,6 @@ def player_piano():
     try:
         port2 = mido.open_output('test_port', virtual=True)
 
-        HOST = '192.168.1.37'
-        PORT = 2031
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.connect((HOST, PORT))
-
         current_directory = os.getcwd()
         jazz_directory = os.path.join(os.getcwd(), 'jazz_midis')
         classical_directory = os.path.join(os.getcwd(), 'classical_midis')

@@ -24,6 +24,12 @@ last_message_ts = time.time()
 global idle
 idle = False
 
+HOST = '192.168.1.36'
+PORT = 2031
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.bind((HOST, PORT))
+s.listen(1)
+
 # LED strip configuration:
 LED_COUNT = 88  # Number of LED pixels.
 LED_PIN = 18  # GPIO pin connected to the pixels (18 uses PWM!).
@@ -105,12 +111,6 @@ def wheel(pos):
         pos -= 170
         return Color(0, int(pos * 3 * multi), int((255 - pos * 3) * multi))
 
-
-HOST = '192.168.1.37'
-PORT = 2031
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.bind((HOST, PORT))
-s.listen(1)
 
 
 def led():
@@ -203,11 +203,9 @@ def midio():
                     ons = remove_dupes(ons)
                     kills = []
             print(ons)
-        s.close()
-    except:
+        # s.close()
+    except KeyboardInterrupt:
         stop = True
-        print('closing')
-        s.close()
 
 
 try:
@@ -215,6 +213,5 @@ try:
     midi_thread.start()
     led_thread = threading.Thread(target=led)
     led_thread.start()
-except:
-    s.close()
+except KeyboardInterrupt:
     stop = True

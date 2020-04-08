@@ -1,12 +1,18 @@
 import client
 import player
 
+HOST = '192.168.1.37'
+PORT = 2031
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.connect((HOST, PORT))
+
 
 while True:
     print('loading piano_leds')
     print('mode?')
     print('1: manual')
     print('2: player')
+    print('3: exit')
     user_input = input()
     print('{}, {}'.format(user_input, type(user_input)))
     if user_input == '1':
@@ -15,3 +21,5 @@ while True:
     if user_input == '2':
         print('selecting player')
         player.player_piano()
+    if user_input == '3':
+        break

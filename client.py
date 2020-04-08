@@ -7,10 +7,6 @@ import mido
 
 def client():
     try:
-        HOST = '192.168.1.37'
-        PORT = 2031
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.connect((HOST, PORT))
         ons = []
         with mido.open_input('MIDI Matrix Encoder:MIDI Matrix Encoder MIDI 1 20:0') as inport:
             while True:
