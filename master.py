@@ -2,7 +2,7 @@ import client
 import player
 import socket
 
-HOST = '192.168.1.36'
+HOST = '192.168.1.37'
 PORT = 2031
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((HOST, PORT))
@@ -15,7 +15,6 @@ while True:
     print('2: player')
     print('3: exit')
     user_input = input()
-    print('{}, {}'.format(user_input, type(user_input)))
     if user_input == '1':
         print('selecting client')
         client.client(s)

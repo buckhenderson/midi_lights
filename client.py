@@ -34,4 +34,7 @@ def client(s):
                             s.send(this_message_s)
                     print(ons)
     except KeyboardInterrupt:
+        this_message = 'done,                       '
+        this_message_s = pickle.dumps(this_message)
+        s.send(this_message_s)
         print('exiting client')

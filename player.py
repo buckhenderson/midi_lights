@@ -92,4 +92,7 @@ def player_piano(s):
                     print(ons)
     except KeyboardInterrupt:
         port2.close()
+        this_message = 'done,                       '
+        this_message_s = pickle.dumps(this_message)
+        s.send(this_message_s)
         print('exiting player_piano')

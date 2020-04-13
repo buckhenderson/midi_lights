@@ -24,7 +24,7 @@ last_message_ts = time.time()
 global idle
 idle = False
 
-HOST = '192.168.1.36'
+HOST = '192.168.1.37'
 PORT = 2031
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind((HOST, PORT))
@@ -33,7 +33,6 @@ s.listen(1)
 # LED strip configuration:
 LED_COUNT = 88  # Number of LED pixels.
 LED_PIN = 18  # GPIO pin connected to the pixels (18 uses PWM!).
-# LED_PIN        = 10      # GPIO pin connected to the pixels (10 uses SPI /dev/spidev0.0).
 LED_FREQ_HZ = 800000  # LED signal frequency in hertz (usually 800khz)
 LED_DMA = 10  # DMA channel to use for generating signal (try 10)
 LED_BRIGHTNESS = 255  # Set to 0 for darkest and 255 for brightest
@@ -202,6 +201,8 @@ def midio():
                     ons = [x for x in ons if x[1] not in kills]
                     ons = remove_dupes(ons)
                     kills = []
+                if this_type == 'done':
+                    ons = []
             print(ons)
         # s.close()
     except KeyboardInterrupt:
