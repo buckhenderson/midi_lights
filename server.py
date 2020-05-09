@@ -153,7 +153,7 @@ def led():
 
 def fade(tup, input_time, seconds):
     multiplier = 1 - min((time.time() - input_time), seconds) / seconds
-    new_tup = tuple([int(multiplier*x) for x in tup])
+    new_tup = tuple([int(multiplier*x*.5) for x in tup])
     return new_tup
 
 
